@@ -1,5 +1,3 @@
-require "ruby-debug"
-
 module Jekyll
 
   class IncludeTag < Liquid::Tag
@@ -27,7 +25,7 @@ module Jekyll
       self.site = context.registers[:site]
       self.name = alt || @file
       self.ext = File.extname(self.name)
-      dir = File.join(self.site.source, "_includes")
+      dir = File.join(File.expand_path(self.site.source), "_includes")
       if (File.exist? File.join(dir,self.name))
         self.read_yaml(dir, self.name)
       else
@@ -42,8 +40,7 @@ module Jekyll
       end
 
       self.process(context)
-      root = File.expand_path(self.site.source)
-      Dir.chdir(File.join(root, '_includes')) do
+      Dir.chdir(File.join(self.site.source, '_includes')) do
         choices = Dir['**/*'].reject { |x| File.symlink?(x) }
         if choices.include?(self.name)
           self.content = File.read(self.name)
