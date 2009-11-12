@@ -1,3 +1,5 @@
+require "ruby-debug"
+
 module Jekyll
 
   class IncludeTag < Liquid::Tag
@@ -38,9 +40,10 @@ module Jekyll
       if @file !~ /^[a-zA-Z0-9_\/\.-]+$/ || @file =~ /\.\// || @file =~ /\/\./
         return "Include file '#{@file}' contains invalid characters or sequences"
       end
-      
+
       self.process(context)
-      Dir.chdir(File.join(self.site.source, '_includes')) do
+      root = File.expand_path(self.site.source)
+      Dir.chdir(File.join(root, '_includes')) do
         choices = Dir['**/*'].reject { |x| File.symlink?(x) }
         if choices.include?(self.name)
           self.content = File.read(self.name)
