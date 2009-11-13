@@ -11,8 +11,8 @@ module Jekyll
     def initialize(config)
       self.config          = config.clone
 
-      self.source          = config['source']
-      self.dest            = config['destination']
+      self.source          = File.expand_path(config['source'])
+      self.dest            = File.expand_path(config['destination'])
       self.lsi             = config['lsi']
       self.pygments        = config['pygments']
       self.permalink_style = config['permalink'].to_sym
